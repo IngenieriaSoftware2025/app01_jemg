@@ -1,6 +1,6 @@
 {
-    "name": "mindef/demo",
-    "description": "Proyecto MVC demo",
+    "name": "app01/jemg",
+    "description": "App funcional que permita gestionar una lista de compras de forma organizada",
     "type": "project",
     "config": {
         "platform-check": false
