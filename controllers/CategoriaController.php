@@ -18,7 +18,7 @@ class CategoriaController extends ActiveRecord{
         getHeadersApi(); // Asegura encabezados para API
 
         // Sanitizar y validar entrada
-        $_POST['cat_nombre'] = htmlspecialchars(trim($_POST['cat_nombre']));
+        $_POST['cat_nombre'] = ucfirst(strtolower(trim($_POST['cat_nombre'] ?? '')));
         $nombre = $_POST['cat_nombre'];
 
         if (strlen($nombre) < 3) {
@@ -92,7 +92,7 @@ class CategoriaController extends ActiveRecord{
     getHeadersApi();
 
     $id = $_POST['cat_id'] ?? null;
-    $nombre = trim($_POST['cat_nombre'] ?? '');
+    $nombre = ucfirst(strtolower(trim($_POST['cat_nombre'] ?? '')));
     $situacion = $_POST['cat_situacion'] ?? 1;
 
     // Validaciones básicas
