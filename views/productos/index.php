@@ -4,7 +4,7 @@
             <div class="card-body">
                 <h4 class="text-center text-success mb-4">Registrar Producto</h4>
 
-                <form method="POST" action="/productos">
+                <form id="FormProductos">
                     <input type="hidden" id="pro_id" name="pro_id">
 
                     <div class="row mb-3">
@@ -40,10 +40,23 @@
 
                     <input type="hidden" name="pro_comprado" value="0">
 
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-success">Guardar</button>
-                        <button type="reset" class="btn btn-secondary">Limpiar</button>
-                    </div>
+                     <div class="row justify-content-center mt-5">
+                            <div class="col-auto">
+                                <button class="btn btn-success" type="submit" id="BtnGuardar">
+                                    Guardar
+                                </button>
+                            </div>
+
+                            <div class="col-auto ">
+                                <button class="btn btn-warning d-none" type="button" id="BtnModificar">
+                                    Modificar
+                                </button>
+                            </div>
+
+                            <div class="col-auto">
+                                <button class="btn btn-secondary" type="reset" id="BtnLimpiar">
+                                    Limpiar
+                                </button>
                 </form>
 
                 <?php if (!empty($errores)) : ?>

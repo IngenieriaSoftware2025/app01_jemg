@@ -4,7 +4,7 @@
             <div class="card-body">
                 <h4 class="text-center text-primary mb-4">Registrar Categoría</h4>
 
-                <form method="POST" action="/categorias">
+                <form id="FormCategorias">
                     <input type="hidden" name="cat_id" id="cat_id">
 
                     <div class="mb-3">
@@ -13,7 +13,7 @@
                     </div>
 
                     <div class="text-center">
-                        <button type="submit" class="btn btn-success">Guardar</button>
+                        <button type="submit" class="btn btn-success" id="BtnGuardar">Guardar</button>
                         <button type="reset" class="btn btn-secondary">Limpiar</button>
                     </div>
                 </form>
