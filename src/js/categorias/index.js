@@ -22,10 +22,23 @@ const validarNombre = () => {
 };
 
 const GuardarCategoria = async (event) => {
-    event.preventDefault();  
-    BtnGuardar.disabled = true; 
+    event.preventDefault();
+    BtnGuardar.disabled = true;
 
-    const body = new FormData(FormCategorias); 
+    // Validación del formulario (omitimos 'cat_id' porque es autogenerado)
+    if (!validarFormulario(FormCategorias, ['cat_id'])) {
+        Swal.fire({
+            position: "center",
+            icon: "info",
+            title: "FORMULARIO INCOMPLETO",
+            text: "Debe de validar todos los campos",
+            showConfirmButton: true,
+        });
+        BtnGuardar.disabled = false;
+        return;
+    }
+
+    const body = new FormData(FormCategorias);
 
     const url = '/app01_jemg/categorias/guardarAPI';
     const config = {
@@ -34,32 +47,44 @@ const GuardarCategoria = async (event) => {
     };
 
     try {
-        const respuesta = await fetch (url, config);
+        const respuesta = await fetch(url, config);
         const datos = await respuesta.json();
 
-        const{ codigo, mensaje } = datos;
+        const { codigo, mensaje } = datos;
 
-        if (codigo == 1){
+        if (codigo == 1) {
             await Swal.fire({
+                position: "center",
                 icon: "success",
                 title: "Éxito",
-                text: mensaje
+                text: mensaje,
+                showConfirmButton: true,
             });
-            FormCategorias.reset();
-        }else {
+
+            limpiarTodo();
+            BuscarCategorias(true);
+        } else {
             await Swal.fire({
-                icon: "error",
+                position: "center",
+                icon: "info",
                 title: "Error",
-                text: mensaje
+                text: mensaje,
+                showConfirmButton: true,
             });
         }
+
     } catch (error) {
-        console.log(error);        
+        console.log(error);
+        Swal.fire({
+            icon: "error",
+            title: "Error de red",
+            text: "No se pudo conectar con el servidor"
+        });
     }
 
-    BtnGuardar.disabled = false
-
+    BtnGuardar.disabled = false;
 };
+
 
 const BuscarCategorias = async () => {
     const url = '/app01_jemg/categorias/buscarAPI';
@@ -72,6 +97,7 @@ const BuscarCategorias = async () => {
         const datos = await respuesta.json();
         const { codigo, mensaje, data } = datos;
 
+        console.log(datos)
         if (codigo == 1) {
             await Swal.fire({
                 position: "center",

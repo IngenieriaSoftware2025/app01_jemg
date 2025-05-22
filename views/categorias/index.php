@@ -46,6 +46,7 @@
 
                 <div class="table-responsive p-2">
                     <table class="table table-striped table-hover table-bordered w-100 table-sm" id="TableCategorias">
+                        
                     </table>
                 </div>
 
