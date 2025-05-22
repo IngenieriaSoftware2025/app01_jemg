@@ -150,7 +150,7 @@ const datatable = new DataTable('#TableCategorias', {
         {
             title: 'Situación',
             data: 'cat_situacion',
-            render: (data) => data === 1 ? 'Activa' : 'Inactiva'
+            render: (data) => data === 1 ? 'Inactiva' : 'Activa'
         },
         {
             title: 'Acciones',

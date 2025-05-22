@@ -150,7 +150,6 @@ class CategoriaController extends ActiveRecord{
 public static function eliminarAPI()
 {
     getHeadersApi();
-
     $id = $_GET['id'] ?? null;
 
     if (!$id) {
@@ -173,7 +172,9 @@ public static function eliminarAPI()
             return;
         }
 
-        $categoria->eliminar();
+        // ELIMINACIÓN LÓGICA: cambiar situación a inactiva
+        $categoria->sincronizar(['cat_situacion' => 0]);
+        $categoria->actualizar();
 
         http_response_code(200);
         echo json_encode([
@@ -189,6 +190,7 @@ public static function eliminarAPI()
         ]);
     }
 }
+
 
 
 

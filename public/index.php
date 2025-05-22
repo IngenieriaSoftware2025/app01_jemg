@@ -17,7 +17,7 @@ $router->get('/categorias', [CategoriaController::class,'renderizarPagina']);
 $router->post('/categorias/guardarAPI', [CategoriaController::class,'guardarAPI']);
 $router->get('/categorias/buscarAPI', [CategoriaController::class,'buscarAPI']);
 $router->post('/categorias/modificarAPI', [CategoriaController::class,'modificarAPI']);
-$router->post('/categorias/eliminarAPI', [CategoriaController::class,'eliminarAPI']);
+$router->get('/categorias/eliminarAPI', [CategoriaController::class,'eliminarAPI']);
 //RUTAS PARA PRODUCTO
 $router->get('/productos', [ProductoController::class,'renderizarPagina']);
 $router->post('/productos/guardarAPI', [ProductoController::class,'guardarAPI']);
