@@ -15,7 +15,7 @@
         <a class="navbar-brand text-white" href="/app01_jemg/">INICIO</a>
         <ul class="nav nav-pills">
             <li class="nav-item">
-                <a class="nav-link" href="/app01_jemg/perro">Categorías</a>
+                <a class="nav-link" href="/app01_jemg/categorias">Categorías</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/app01_jemg/productos">Productos</a>

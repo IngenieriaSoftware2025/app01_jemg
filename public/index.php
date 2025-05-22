@@ -14,10 +14,16 @@ $router->get('/', [AppController::class,'index']);
 
 //RUTAS PARA CATEGORIA
 $router->get('/categorias', [CategoriaController::class,'renderizarPagina']);
-
+$router->get('/categorias/guardarAPI', [CategoriaController::class,'guardarAPI']);
+$router->get('/categorias/buscarAPI', [CategoriaController::class,'buscarAPI']);
+$router->get('/categorias/modificarAPI', [CategoriaController::class,'modificarAPI']);
+$router->get('/categorias/eliminarAPI', [CategoriaController::class,'eliminarAPI']);
 //RUTAS PARA PRODUCTO
 $router->get('/productos', [ProductoController::class,'renderizarPagina']);
-
+$router->get('/productos/guardarAPI', [ProductoController::class,'guardarAPI']);
+$router->get('/productos/buscarAPI', [ProductoController::class,'buscarAPI']);
+$router->get('/productos/modificarAPI', [ProductoController::class,'modificarAPI']);
+$router->get('/productos/eliminarAPI', [ProductoController::class,'eliminarAPI']);
 
 //OTRAS
 
