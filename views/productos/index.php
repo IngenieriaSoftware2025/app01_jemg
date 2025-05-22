@@ -31,6 +31,7 @@
                         <div class="col-md-6">
                             <label for="pro_prioridad" class="form-label">Prioridad</label>
                             <select name="pro_prioridad" id="pro_prioridad" class="form-select" required>
+                                <option value="">-- Seleccione prioridad --</option>
                                 <option value="Alta">Alta</option>
                                 <option value="Media">Media</option>
                                 <option value="Baja">Baja</option>
@@ -40,23 +41,17 @@
 
                     <input type="hidden" name="pro_comprado" value="0">
 
-                     <div class="row justify-content-center mt-5">
-                            <div class="col-auto">
-                                <button class="btn btn-success" type="submit" id="BtnGuardar">
-                                    Guardar
-                                </button>
-                            </div>
-
-                            <div class="col-auto ">
-                                <button class="btn btn-warning d-none" type="button" id="BtnModificar">
-                                    Modificar
-                                </button>
-                            </div>
-
-                            <div class="col-auto">
-                                <button class="btn btn-secondary" type="reset" id="BtnLimpiar">
-                                    Limpiar
-                                </button>
+                    <div class="row justify-content-center mt-5">
+                        <div class="col-auto">
+                            <button class="btn btn-success" type="submit" id="BtnGuardar">Guardar</button>
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-warning d-none" type="button" id="BtnModificar">Modificar</button>
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-secondary" type="reset" id="BtnLimpiar">Limpiar</button>
+                        </div>
+                    </div>
                 </form>
 
                 <?php if (!empty($errores)) : ?>
@@ -73,6 +68,7 @@
     </div>
 </div>
 
+<!-- Tabla de productos pendientes -->
 <div class="row justify-content-center p-3">
     <div class="col-lg-10">
         <div class="card custom-card shadow-lg" style="border-radius: 10px; border: 1px solid #198754;">
@@ -80,15 +76,14 @@
                 <h3 class="text-center text-success">PRODUCTOS REGISTRADOS EN LA BASE DE DATOS</h3>
 
                 <div class="table-responsive p-2">
-                    <table class="table table-striped table-hover table-bordered w-100 table-sm" id="TableProductos">
-                        
-                    </table>
+                    <table class="table table-striped table-hover table-bordered w-100 table-sm" id="TableProductos"></table>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Tabla de productos comprados -->
 <div class="row justify-content-center p-3">
     <div class="col-lg-10">
         <div class="card custom-card shadow" style="border-radius: 10px; border: 1px solid #6c757d;">
@@ -96,15 +91,12 @@
                 <h3 class="text-center text-muted">PRODUCTOS COMPRADOS</h3>
 
                 <div class="table-responsive p-2">
-                    <table class="table table-striped table-hover table-bordered w-100 table-sm" id="TableComprados">
-                    
-                    </table>
+                    <table class="table table-striped table-hover table-bordered w-100 table-sm" id="TableComprados"></table>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Script -->
 <script src="<?= asset('build/js/productos/index.js') ?>"></script>
-
-

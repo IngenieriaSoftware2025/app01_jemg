@@ -25,15 +25,16 @@ class ProductoController extends ActiveRecord {
         getHeadersApi();
 
         // Sanitizar y formatear
-        $_POST['pro_nombre'] = ucfirst(strtolower(trim($_POST['pro_nombre'] ?? '')));
+        $_POST['pro_nombre'] = ucwords(strtolower(trim($_POST['pro_nombre'] ?? '')));
         $nombre = $_POST['pro_nombre'];
         $cat_id = $_POST['cat_id'] ?? null;
         $cantidad = intval($_POST['pro_cantidad'] ?? 0);
-        $prioridad = strtoupper(trim($_POST['pro_prioridad'] ?? ''));
+        $prioridad = ucfirst(strtolower(trim($_POST['pro_prioridad'] ?? '')));
+        $prioridadesValidas = ['Alta', 'Media', 'Baja'];
         $comprado = 0; // se registra por defecto como "no comprado"
 
         // Validaciones básicas
-        if (strlen($nombre) < 2 || !$cat_id || $cantidad < 1 || $prioridad === '') {
+        if (strlen($nombre) < 2 || !$cat_id || $cantidad < 1 || !in_array($prioridad, $prioridadesValidas)) {
             http_response_code(400);
             echo json_encode([
                 'codigo' => 0,
@@ -90,11 +91,12 @@ class ProductoController extends ActiveRecord {
         $nombre = ucfirst(strtolower(trim($_POST['pro_nombre'] ?? '')));
         $cat_id = $_POST['cat_id'] ?? null;
         $cantidad = intval($_POST['pro_cantidad'] ?? 0);
-        $prioridad = strtoupper(trim($_POST['pro_prioridad'] ?? ''));
+        $prioridad = ucfirst(strtolower(trim($_POST['pro_prioridad'] ?? '')));
+        $prioridadesValidas = ['Alta', 'Media', 'Baja'];
         $comprado = $_POST['pro_comprado'] ?? 0;
 
         // Validaciones básicas
-        if (!$id || strlen($nombre) < 2 || !$cat_id || $cantidad < 1 || $prioridad === '') {
+        if (strlen($nombre) < 2 || !$cat_id || $cantidad < 1 || !in_array($prioridad, $prioridadesValidas)) {
             http_response_code(400);
             echo json_encode([
                 'codigo' => 0,
@@ -221,7 +223,8 @@ class ProductoController extends ActiveRecord {
                 return;
             }
 
-            $producto->eliminar(); // ← ejecución física
+            $producto->sincronizar(['pro_comprado' => 2]); 
+            $producto->actualizar();
             http_response_code(200);
             echo json_encode([
                 'codigo' => 1,
@@ -236,6 +239,69 @@ class ProductoController extends ActiveRecord {
             ]);
         }
     }
+
+   public static function buscarAPI()
+    {
+        try {
+            $sql = "SELECT p.*, c.cat_nombre FROM productos p
+                    JOIN categorias c ON p.cat_id = c.cat_id
+                    WHERE p.pro_comprado = 0
+                    ORDER BY p.cat_id,
+                        CASE p.pro_prioridad
+                            WHEN 'Alta' THEN 1
+                            WHEN 'Media' THEN 2
+                            WHEN 'Baja' THEN 3
+                        END";
+
+            $data = self::fetchArray($sql);
+
+            http_response_code(200);
+            echo json_encode([
+                'codigo' => 1,
+                'mensaje' => 'Productos pendientes obtenidos correctamente',
+                'data' => $data
+            ]);
+        } catch (Exception $e) {
+            http_response_code(400);
+            echo json_encode([
+                'codigo' => 0,
+                'mensaje' => 'Error al obtener productos pendientes',
+                'detalle' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public static function buscarCompradosAPI()
+    {
+        try {
+            $sql = "SELECT p.*, c.cat_nombre FROM productos p
+                    JOIN categorias c ON p.cat_id = c.cat_id
+                    WHERE p.pro_comprado = 1
+                    ORDER BY p.cat_id,
+                        CASE p.pro_prioridad
+                            WHEN 'Alta' THEN 1
+                            WHEN 'Media' THEN 2
+                            WHEN 'Baja' THEN 3
+                        END";
+
+            $data = self::fetchArray($sql);
+
+            http_response_code(200);
+            echo json_encode([
+                'codigo' => 1,
+                'mensaje' => 'Productos comprados obtenidos correctamente',
+                'data' => $data
+            ]);
+        } catch (Exception $e) {
+            http_response_code(400);
+            echo json_encode([
+                'codigo' => 0,
+                'mensaje' => 'Error al obtener productos comprados',
+                'detalle' => $e->getMessage()
+            ]);
+        }
+    }
+
 
 
 

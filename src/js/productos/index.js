@@ -10,12 +10,14 @@ const BtnLimpiar = document.getElementById('BtnLimpiar');
 
 const tablaProductos = new DataTable('#TableProductos', {
     language: lenguaje,
+    order: [[3, 'asc'], [4, 'asc']],
+    rowGroup: { dataSrc: 'cat_nombre' },
     data: [],
     columns: [
         { title: 'No.', render: (data, type, row, meta) => meta.row + 1 },
         { title: 'Nombre', data: 'pro_nombre' },
         { title: 'Cantidad', data: 'pro_cantidad' },
-        { title: 'Categoría', data: 'cat_id' },
+        { title: 'Categoría', data: 'cat_nombre' }, // nombre de la categoría
         { title: 'Prioridad', data: 'pro_prioridad' },
         {
             title: 'Acciones',
@@ -43,30 +45,46 @@ const tablaProductos = new DataTable('#TableProductos', {
 
 const tablaComprados = new DataTable('#TableComprados', {
     language: lenguaje,
+    order: [[3, 'asc'], [4, 'asc']],
+    rowGroup: { dataSrc: 'cat_nombre' },
     data: [],
     columns: [
         { title: 'Nombre', data: 'pro_nombre' },
         { title: 'Cantidad', data: 'pro_cantidad' },
-        { title: 'Categoría', data: 'cat_id' },
+        { title: 'Categoría', data: 'cat_nombre' },
         { title: 'Prioridad', data: 'pro_prioridad' }
     ]
 });
 
 const BuscarProductos = async () => {
     const url = '/app01_jemg/productos/buscarAPI';
-    const config = { method: 'GET' };
-
     try {
-        const respuesta = await fetch(url, config);
+        const respuesta = await fetch(url);
         const datos = await respuesta.json();
 
-        const productos = datos.data.filter(p => p.pro_comprado == 0);
-        const comprados = datos.data.filter(p => p.pro_comprado == 1);
-
-        tablaProductos.clear().rows.add(productos).draw();
-        tablaComprados.clear().rows.add(comprados).draw();
+        if (datos.codigo === 1) {
+            tablaProductos.clear().rows.add(datos.data).draw();
+        } else {
+            console.warn('Sin productos pendientes:', datos.mensaje);
+        }
     } catch (error) {
-        console.error('Error al buscar productos', error);
+        console.error('Error al buscar productos:', error);
+    }
+};
+
+const BuscarComprados = async () => {
+    const url = '/app01_jemg/productos/buscarCompradosAPI';
+    try {
+        const respuesta = await fetch(url);
+        const datos = await respuesta.json();
+
+        if (datos.codigo === 1) {
+            tablaComprados.clear().rows.add(datos.data).draw();
+        } else {
+            console.warn('Sin productos comprados:', datos.mensaje);
+        }
+    } catch (error) {
+        console.error('Error al buscar productos comprados:', error);
     }
 };
 
@@ -91,6 +109,7 @@ const GuardarProducto = async (event) => {
             await Swal.fire("¡Éxito!", datos.mensaje, "success");
             limpiarFormulario();
             BuscarProductos();
+            BuscarComprados();
         } else {
             Swal.fire("Error", datos.mensaje, "error");
         }
@@ -122,6 +141,7 @@ const ModificarProducto = async (event) => {
             await Swal.fire("¡Modificado!", datos.mensaje, "success");
             limpiarFormulario();
             BuscarProductos();
+            BuscarComprados();
         } else {
             Swal.fire("Error", datos.mensaje, "error");
         }
@@ -152,6 +172,7 @@ const EliminarProducto = async (event) => {
         if (datos.codigo == 1) {
             Swal.fire("Eliminado", datos.mensaje, "success");
             BuscarProductos();
+            BuscarComprados();
         } else {
             Swal.fire("Error", datos.mensaje, "error");
         }
@@ -171,6 +192,7 @@ const ComprarProducto = async (event) => {
         if (datos.codigo == 1) {
             Swal.fire("¡Comprado!", datos.mensaje, "success");
             BuscarProductos();
+            BuscarComprados();
         } else {
             Swal.fire("Error", datos.mensaje, "error");
         }
@@ -197,6 +219,7 @@ const limpiarFormulario = () => {
     BtnModificar.classList.add('d-none');
 };
 
+// Eventos
 tablaProductos.on('click', '.modificar', llenarFormulario);
 tablaProductos.on('click', '.eliminar', EliminarProducto);
 tablaProductos.on('click', '.comprar', ComprarProducto);
@@ -206,3 +229,4 @@ BtnLimpiar.addEventListener('click', limpiarFormulario);
 
 // Inicialización
 BuscarProductos();
+BuscarComprados();

@@ -23,7 +23,12 @@ $router->get('/productos', [ProductoController::class,'renderizarPagina']);
 $router->post('/productos/guardarAPI', [ProductoController::class,'guardarAPI']);
 $router->get('/productos/buscarAPI', [ProductoController::class,'buscarAPI']);
 $router->post('/productos/modificarAPI', [ProductoController::class,'modificarAPI']);
-$router->post('/productos/eliminarAPI', [ProductoController::class,'eliminarAPI']);
+$router->get('/productos/eliminarAPI', [ProductoController::class,'eliminarAPI']);
+$router->get('/productos/comprarAPI', [ProductoController::class, 'comprarAPI']);
+$router->get('/productos/buscarCompradosAPI', [ProductoController::class,'buscarCompradosAPI']);
+
+
+
 
 //OTRAS
 
