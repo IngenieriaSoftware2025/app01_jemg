@@ -172,7 +172,7 @@ public static function eliminarAPI()
             return;
         }
 
-        // ELIMINACIÓN LÓGICA: cambiar situación a inactiva
+        //cambiar situación a inactiva
         $categoria->sincronizar(['cat_situacion' => 0]);
         $categoria->actualizar();
 
