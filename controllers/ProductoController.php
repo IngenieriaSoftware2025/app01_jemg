@@ -29,7 +29,7 @@ class ProductoController extends ActiveRecord {
         $nombre = $_POST['pro_nombre'];
         $cat_id = $_POST['cat_id'] ?? null;
         $cantidad = intval($_POST['pro_cantidad'] ?? 0);
-        $prioridad = ucfirst(strtolower(trim($_POST['pro_prioridad'] ?? '')));
+        $prioridad = ucwords(strtolower(trim($_POST['pro_prioridad'] ?? '')));
         $prioridadesValidas = ['Alta', 'Media', 'Baja'];
         $comprado = 0; // se registra por defecto como "no comprado"
 
@@ -88,7 +88,7 @@ class ProductoController extends ActiveRecord {
         getHeadersApi();
 
         $id = $_POST['pro_id'] ?? null;
-        $nombre = ucfirst(strtolower(trim($_POST['pro_nombre'] ?? '')));
+        $nombre = ucwords(strtolower(trim($_POST['pro_nombre'] ?? '')));
         $cat_id = $_POST['cat_id'] ?? null;
         $cantidad = intval($_POST['pro_cantidad'] ?? 0);
         $prioridad = ucfirst(strtolower(trim($_POST['pro_prioridad'] ?? '')));
@@ -247,18 +247,19 @@ class ProductoController extends ActiveRecord {
                     JOIN categorias c ON p.cat_id = c.cat_id
                     WHERE p.pro_comprado = 0
                     ORDER BY p.cat_id,
-                        CASE p.pro_prioridad
-                            WHEN 'Alta' THEN 1
-                            WHEN 'Media' THEN 2
-                            WHEN 'Baja' THEN 3
-                        END";
+                    CASE p.pro_prioridad
+                    WHEN 'Alta' THEN 1
+                    WHEN 'Media' THEN 2
+                    WHEN 'Baja' THEN 3
+                END";
+
 
             $data = self::fetchArray($sql);
 
             http_response_code(200);
             echo json_encode([
                 'codigo' => 1,
-                'mensaje' => 'Productos pendientes obtenidos correctamente',
+                'mensaje' => 'Productos obtenidos correctamente',
                 'data' => $data
             ]);
         } catch (Exception $e) {

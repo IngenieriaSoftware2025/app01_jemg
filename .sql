@@ -1,10 +1,10 @@
 CREATE DATABASE montes
 
-
 -- Tabla: categorias
 CREATE TABLE categorias (
     cat_id SERIAL PRIMARY KEY,
-    cat_nombre VARCHAR(50) NOT NULL UNIQUE
+    cat_nombre VARCHAR(50) NOT NULL UNIQUE,
+    cat_situacion SMALLINT DEFAULT 1
 );
 
 --Tabla: productos

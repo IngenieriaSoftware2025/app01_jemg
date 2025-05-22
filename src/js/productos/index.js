@@ -68,7 +68,7 @@ const BuscarProductos = async () => {
             console.warn('Sin productos pendientes:', datos.mensaje);
         }
     } catch (error) {
-        console.error('Error al buscar productos:', error);
+        console.log('Error al buscar productos:', error);
     }
 };
 
@@ -84,7 +84,7 @@ const BuscarComprados = async () => {
             console.warn('Sin productos comprados:', datos.mensaje);
         }
     } catch (error) {
-        console.error('Error al buscar productos comprados:', error);
+        console.log('Error al buscar productos comprados:', error);
     }
 };
 
@@ -93,9 +93,9 @@ const GuardarProducto = async (event) => {
     BtnGuardar.disabled = true;
 
     if (!validarFormulario(FormProductos, ['pro_id'])) {
-        Swal.fire("Formulario incompleto", "Todos los campos son obligatorios", "warning");
-        BtnGuardar.disabled = false;
-        return;
+    Swal.fire("Formulario incompleto", "Todos los campos son obligatorios", "warning");
+    BtnGuardar.disabled = false;
+    return; 
     }
 
     const body = new FormData(FormProductos);
@@ -106,7 +106,13 @@ const GuardarProducto = async (event) => {
         const datos = await respuesta.json();
 
         if (datos.codigo == 1) {
-            await Swal.fire("¡Éxito!", datos.mensaje, "success");
+            await Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Éxito",
+                text: datos.mensaje,
+                showConfirmButton: true,
+            });
             limpiarFormulario();
             BuscarProductos();
             BuscarComprados();
@@ -114,7 +120,7 @@ const GuardarProducto = async (event) => {
             Swal.fire("Error", datos.mensaje, "error");
         }
     } catch (error) {
-        console.error('Error al guardar producto:', error);
+        console.log('Error al guardar producto:', error);
     }
 
     BtnGuardar.disabled = false;
@@ -127,7 +133,7 @@ const ModificarProducto = async (event) => {
     if (!validarFormulario(FormProductos, ['pro_id'])) {
         Swal.fire("Formulario incompleto", "Todos los campos son obligatorios", "warning");
         BtnModificar.disabled = false;
-        return;
+        return; 
     }
 
     const body = new FormData(FormProductos);
@@ -146,7 +152,7 @@ const ModificarProducto = async (event) => {
             Swal.fire("Error", datos.mensaje, "error");
         }
     } catch (error) {
-        console.error('Error al modificar producto:', error);
+        console.log('Error al modificar producto:', error);
     }
 
     BtnModificar.disabled = false;
@@ -177,7 +183,7 @@ const EliminarProducto = async (event) => {
             Swal.fire("Error", datos.mensaje, "error");
         }
     } catch (error) {
-        console.error("Error al eliminar", error);
+        console.log("Error al eliminar", error);
     }
 };
 
@@ -197,7 +203,7 @@ const ComprarProducto = async (event) => {
             Swal.fire("Error", datos.mensaje, "error");
         }
     } catch (error) {
-        console.error("Error al marcar como comprado", error);
+        console.log("Error al marcar como comprado", error);
     }
 };
 
