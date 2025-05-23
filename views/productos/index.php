@@ -5,7 +5,7 @@
                 <h4 class="text-center text-success mb-4">Registrar Producto</h4>
 
                 <form id="FormProductos">
-                    <input type="hidden" id="pro_id" name="pro_id">
+                    <input type="hidden" id="pro_id" name="pro_id" value="">
 
                     <div class="row mb-3">
                         <div class="col-md-6">

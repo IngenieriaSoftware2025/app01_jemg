@@ -10,7 +10,7 @@ const BtnLimpiar = document.getElementById('BtnLimpiar');
 
 const tablaProductos = new DataTable('#TableProductos', {
     language: lenguaje,
-    order: [[3, 'asc'], [4, 'asc']],
+    order: [],
     rowGroup: { dataSrc: 'cat_nombre' },
     data: [],
     columns: [
@@ -32,7 +32,8 @@ const tablaProductos = new DataTable('#TableProductos', {
                         data-nombre="${row.pro_nombre}"
                         data-cantidad="${row.pro_cantidad}"
                         data-cat_id="${row.cat_id}"
-                        data-prioridad="${row.pro_prioridad}">
+                        data-prioridad="${row.pro_prioridad}"
+                        data-comprado="${row.pro_comprado}">
                         <i class="bi bi-pencil-square"></i> Modificar
                     </button>
                     <button class='btn btn-danger eliminar mx-1' data-id='${data}'>
@@ -45,7 +46,7 @@ const tablaProductos = new DataTable('#TableProductos', {
 
 const tablaComprados = new DataTable('#TableComprados', {
     language: lenguaje,
-    order: [[3, 'asc'], [4, 'asc']],
+    order: [], // Sin ordenamiento inicial
     rowGroup: { dataSrc: 'cat_nombre' },
     data: [],
     columns: [
@@ -58,17 +59,24 @@ const tablaComprados = new DataTable('#TableComprados', {
 
 const BuscarProductos = async () => {
     const url = '/app01_jemg/productos/buscarAPI';
+    console.log('Llamando a:', url);
+    
     try {
         const respuesta = await fetch(url);
         const datos = await respuesta.json();
+        
+        console.log('Respuesta completa:', datos); // Ver toda la respuesta
+        console.log('Datos recibidos:', datos.data); // Ver los datos específicamente
 
-        if (datos.codigo === 1) {
+        if (datos.codigo === 1 && datos.data) {
+            console.log('Productos encontrados:', datos.data.length);
             tablaProductos.clear().rows.add(datos.data).draw();
         } else {
             console.warn('Sin productos pendientes:', datos.mensaje);
+            tablaProductos.clear().draw(); // Limpiar la tabla si no hay datos
         }
     } catch (error) {
-        console.log('Error al buscar productos:', error);
+        console.error('Error al buscar productos:', error);
     }
 };
 
@@ -84,7 +92,7 @@ const BuscarComprados = async () => {
             console.warn('Sin productos comprados:', datos.mensaje);
         }
     } catch (error) {
-        console.log('Error al buscar productos comprados:', error);
+        console.error('Error al buscar productos comprados:', error);
     }
 };
 
@@ -95,8 +103,8 @@ const GuardarProducto = async (event) => {
     if (!validarFormulario(FormProductos, ['pro_id'])) {
     Swal.fire("Formulario incompleto", "Todos los campos son obligatorios", "warning");
     BtnGuardar.disabled = false;
-    return; 
-    }
+    return;
+}
 
     const body = new FormData(FormProductos);
     const url = '/app01_jemg/productos/guardarAPI';
@@ -106,13 +114,7 @@ const GuardarProducto = async (event) => {
         const datos = await respuesta.json();
 
         if (datos.codigo == 1) {
-            await Swal.fire({
-                position: "center",
-                icon: "success",
-                title: "Éxito",
-                text: datos.mensaje,
-                showConfirmButton: true,
-            });
+            await Swal.fire("¡Éxito!", datos.mensaje, "success");
             limpiarFormulario();
             BuscarProductos();
             BuscarComprados();
@@ -120,7 +122,7 @@ const GuardarProducto = async (event) => {
             Swal.fire("Error", datos.mensaje, "error");
         }
     } catch (error) {
-        console.log('Error al guardar producto:', error);
+        console.error('Error al guardar producto:', error);
     }
 
     BtnGuardar.disabled = false;
@@ -133,7 +135,7 @@ const ModificarProducto = async (event) => {
     if (!validarFormulario(FormProductos, ['pro_id'])) {
         Swal.fire("Formulario incompleto", "Todos los campos son obligatorios", "warning");
         BtnModificar.disabled = false;
-        return; 
+        return;  
     }
 
     const body = new FormData(FormProductos);
@@ -152,7 +154,7 @@ const ModificarProducto = async (event) => {
             Swal.fire("Error", datos.mensaje, "error");
         }
     } catch (error) {
-        console.log('Error al modificar producto:', error);
+        console.error('Error al modificar producto:', error);
     }
 
     BtnModificar.disabled = false;
@@ -183,7 +185,7 @@ const EliminarProducto = async (event) => {
             Swal.fire("Error", datos.mensaje, "error");
         }
     } catch (error) {
-        console.log("Error al eliminar", error);
+        console.error("Error al eliminar", error);
     }
 };
 
@@ -203,7 +205,7 @@ const ComprarProducto = async (event) => {
             Swal.fire("Error", datos.mensaje, "error");
         }
     } catch (error) {
-        console.log("Error al marcar como comprado", error);
+        console.error("Error al marcar como comprado", error);
     }
 };
 
@@ -214,6 +216,7 @@ const llenarFormulario = (event) => {
     document.getElementById('pro_cantidad').value = datos.cantidad;
     document.getElementById('cat_id').value = datos.cat_id;
     document.getElementById('pro_prioridad').value = datos.prioridad;
+    document.querySelector('input[name="pro_comprado"]').value = datos.comprado || 0;
 
     BtnGuardar.classList.add('d-none');
     BtnModificar.classList.remove('d-none');

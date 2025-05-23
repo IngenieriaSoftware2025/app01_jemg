@@ -44,8 +44,8 @@ class ProductoController extends ActiveRecord {
         }
 
         // ✅ Validar duplicado (nombre + categoría)
-
-        $sql = "SELECT * FROM productos WHERE pro_nombre = '$nombre' AND cat_id = $cat_id";
+        
+        $sql = "SELECT * FROM productos WHERE LOWER(pro_nombre) = LOWER('$nombre') AND cat_id = $cat_id";
         $duplicado = self::fetchArray($sql);
 
         if (!empty($duplicado)) {
@@ -91,9 +91,9 @@ class ProductoController extends ActiveRecord {
         $nombre = ucwords(strtolower(trim($_POST['pro_nombre'] ?? '')));
         $cat_id = $_POST['cat_id'] ?? null;
         $cantidad = intval($_POST['pro_cantidad'] ?? 0);
-        $prioridad = ucfirst(strtolower(trim($_POST['pro_prioridad'] ?? '')));
+        $prioridad = ucwords(strtolower(trim($_POST['pro_prioridad'] ?? '')));
         $prioridadesValidas = ['Alta', 'Media', 'Baja'];
-        $comprado = $_POST['pro_comprado'] ?? 0;
+        $comprado = intval($_POST['pro_comprado'] ?? 0);
 
         // Validaciones básicas
         if (strlen($nombre) < 2 || !$cat_id || $cantidad < 1 || !in_array($prioridad, $prioridadesValidas)) {
@@ -107,7 +107,7 @@ class ProductoController extends ActiveRecord {
 
         // Validar que el producto no se repita en otra fila con la misma categoría
         $sql = "SELECT * FROM productos 
-                WHERE pro_nombre = '$nombre' AND cat_id = $cat_id AND pro_id != $id";
+        WHERE LOWER(pro_nombre) = LOWER('$nombre') AND cat_id = $cat_id AND pro_id != $id";
         $duplicado = self::fetchArray($sql);
 
         if (!empty($duplicado)) {
@@ -241,36 +241,35 @@ class ProductoController extends ActiveRecord {
     }
 
    public static function buscarAPI()
-    {
-        try {
-            $sql = "SELECT p.*, c.cat_nombre FROM productos p
-                    JOIN categorias c ON p.cat_id = c.cat_id
-                    WHERE p.pro_comprado = 0
-                    ORDER BY p.cat_id,
-                    CASE p.pro_prioridad
-                    WHEN 'Alta' THEN 1
-                    WHEN 'Media' THEN 2
-                    WHEN 'Baja' THEN 3
-                END";
+{
+    try {
+        $sql = "SELECT p.*, c.cat_nombre FROM productos p
+                JOIN categorias c ON p.cat_id = c.cat_id
+                WHERE p.pro_comprado = 0
+                ORDER BY p.cat_id,
+                CASE p.pro_prioridad
+                WHEN 'Alta' THEN 1
+                WHEN 'Media' THEN 2
+                WHEN 'Baja' THEN 3
+            END";
 
+        $data = self::fetchArray($sql);
 
-            $data = self::fetchArray($sql);
-
-            http_response_code(200);
-            echo json_encode([
-                'codigo' => 1,
-                'mensaje' => 'Productos obtenidos correctamente',
-                'data' => $data
-            ]);
-        } catch (Exception $e) {
-            http_response_code(400);
-            echo json_encode([
-                'codigo' => 0,
-                'mensaje' => 'Error al obtener productos pendientes',
-                'detalle' => $e->getMessage()
-            ]);
-        }
+        http_response_code(200);
+        echo json_encode([
+            'codigo' => 1,
+            'mensaje' => 'Productos obtenidos correctamente',
+            'data' => $data
+        ]);
+    } catch (Exception $e) {
+        http_response_code(400);
+        echo json_encode([
+            'codigo' => 0,
+            'mensaje' => 'Error al obtener productos pendientes',
+            'detalle' => $e->getMessage()
+        ]);
     }
+}
 
     public static function buscarCompradosAPI()
     {
